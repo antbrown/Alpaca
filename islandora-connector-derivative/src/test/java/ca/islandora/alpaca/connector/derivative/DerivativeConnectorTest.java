@@ -66,7 +66,10 @@ public class DerivativeConnectorTest extends CamelBlueprintTestSupport {
                     replaceFromWith("direct:start");
 
                     // Rig Drupal REST endpoint to return canned jsonld
-                    interceptSendToEndpoint("http://example.org/derivative/convert?connectionClose=true")
+                    interceptSendToEndpoint(
+                        "http://example.org/derivative/convert" +
+                        "?connectionClose=true&disableStreamCache=true"
+                    )
                             .skipSendToOriginalEndpoint()
                             .process(exchange -> {
                                 exchange.getIn().removeHeaders("*", "Authorization");
@@ -74,7 +77,10 @@ public class DerivativeConnectorTest extends CamelBlueprintTestSupport {
                                 exchange.getIn().setBody("SOME DERIVATIVE", String.class);
                             });
 
-                    mockEndpointsAndSkip("http://localhost:8000/node/2/media/image/3?connectionClose=true");
+                    mockEndpointsAndSkip(
+                        "http://localhost:8000/node/2/media/image/3" +
+                        "?connectionClose=true&disableStreamCache=true"
+                    );
                 }
         });
         context.start();
